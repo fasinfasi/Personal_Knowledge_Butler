@@ -26,10 +26,16 @@ if uploaded_file:
         else:
             slt.error(f"Failed to upload file: {resp.status_code}")
 
-# ✅ Ask a question
-query = slt.text_input("Ask a question about your knowledge base:")
+# ✅ Ask a question with button to the left of the input field
+col1, col2 = slt.columns([5, 1])  # Adjust the ratio as needed
 
-if query:
+with col1:
+    query = slt.text_input("Ask a question about your knowledge base:", label_visibility="collapsed")
+
+with col2:
+    send_clicked = slt.button("Send")
+
+if send_clicked and query:
     with slt.spinner("Searching for answers..."):
         response = requests.get(
             "http://localhost:8000/query",
@@ -44,3 +50,4 @@ if query:
                 slt.warning("No answer found.")
         else:
             slt.error("Failed to retrieve answer. Check backend logs.")
+
